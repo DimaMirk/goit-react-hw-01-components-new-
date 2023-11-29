@@ -1,16 +1,19 @@
 import './App.css';
-import Profile from './components/Profile'
-import user from './user.json'
+import Statistic from './components/Statistic'
+import data from './data.json'
 
 function App() {
   return (
-    <Profile
-      username={user.username}
-      tag={user.tag}
-      location={user.location}
-      avatar={user.avatar}
-      stats={user.stats}
-    />
+    <>
+       <Statistic
+        data={data}
+      />
+      <Statistic
+        title="Upload stats" 
+        data={data}
+      />
+    </>
+   
   );
 }
 
