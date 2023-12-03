@@ -1,18 +1,10 @@
 import './App.css';
-import Statistic from './components/Statistic'
-import data from './data.json'
+import FriendList from './components/FriandsList/FriendList';
+import friends from './friends.json'
 
 function App() {
   return (
-    <>
-       <Statistic
-        data={data}
-      />
-      <Statistic
-        title="Upload stats" 
-        data={data}
-      />
-    </>
+    <FriendList friends={ friends } />
    
   );
 }

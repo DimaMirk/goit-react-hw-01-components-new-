@@ -1,0 +1,27 @@
+.li {
+  display: flex;
+  list-style: none;
+  padding: 20px;
+  align-items: center;
+  outline: 1px solid blue;
+}
+.status {
+  background-color: grey;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  margin-right: 20px;
+}
+.true {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  margin-right: 20px;
+  background-color: green;
+}
+.false {
+  background-color: red;
+}
+.img {
+  margin-right: 20px;
+}
