@@ -1,65 +1,75 @@
 import { Component } from 'react';
+import { nanoid } from 'nanoid'
 import './App.css';
-import Statistic from './components/Statistic'
-import Statistics from './components/Statistics';
-import Section from './components/Section';
-import FeedbackOptions from './components/FeedbackOptions';
+import ContactForm from './components/ContactForm';
+import Filter from './components/Filter';
+import ContactList from './components/ContactList';
+
+
 
 
 class App extends Component{
-    state = {
-        good: 0,
-        neutral: 0,
-        bad: 0
-    }
+  state = {
+    contacts: [],
+    filter: ''
+  }
   
-  countTotalFeedback() {
-        let total = 0;
-        const { state } = this;
-        for (const property in state) {
-           total += state[property]
-        }
-        return total
+
+
+  onSubmitForm = ({ name, number }) => {
+    let newUser = {
+      id: nanoid(),
+      name,
+      number
+    }
+    let donorExist = this.isDonorExist(name)
+
+    if (!donorExist) {
+      this.setState(({contacts}) => {
+      return {contacts:[...contacts,newUser]}
+       })
+    } else {
+      alert(`Donor with name ${name} already exist`)
+    }
+
   }
 
-  countPositiveFeedbackPercentage() {
-        let total = this.countTotalFeedback()
-        let percentage = this.state.good/total*100 || 0
-        return percentage
+  filterChange = (ev) => {
+    const { value } = ev.currentTarget;
+    this.setState({filter:value})
   }
 
-  
-  updateState = (ev) => {
-        console.log(ev.currentTarget.name)
-        const {name} = ev.currentTarget
-       
-        this.setState((prevState) => {
-            console.log(prevState)
-            return {
-                [name]:prevState[name] + 1 
-            }
-        })
+  isDonorExist(name) {
+    if (this.state.contacts.length !== 0) {
+      return this.state.contacts.find((contact) => (contact.name.toLowerCase() === name.toLocaleLowerCase()))
     }
-  
+    return false;
+  }
+
+  onDeleteContact = (ev) => {
+
+    const { contacts } = this.state;
+    const deleteId = ev.currentTarget.id;
+    let newContacts = contacts.filter(contact => (contact.id !== deleteId));
+    this.setState({contacts:[...newContacts]})
+  }
+
   render() {
+    const { contacts,filter } = this.state;
+    const visibleContacts = contacts.filter((contact) => contact.name.toLowerCase().includes(filter.toLocaleLowerCase()));
+
     return (
       <>
-        <Section title='Statistics'>
-          {this.countTotalFeedback() ?
-           <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}
-            /> :
-            <h2>There is no feedback</h2>
-          }
+        <h1>Name</h1>
+        <ContactForm onSubmit={ this.onSubmitForm } />
 
-        </Section>
-        <Section title ='Please leave feedback'>
-          <FeedbackOptions options={this.state} onLeaveFeedback={this.updateState}/>
-        </Section>
+        <h1>Contacts</h1>
+        {visibleContacts.length === 0 || <ContactList c={visibleContacts} onDelete={this.onDeleteContact} />
+        }
+
+        <h2>Find contacts by name</h2>
+        <Filter filter={filter } onFilterChange={this.filterChange} />
+
       </>  
     )
 
